@@ -12,10 +12,17 @@ export type PostProps = {
 type propTypes = {
   posts: PostProps[];
   fetchPosts: Function;
+  newPost: PostProps;
 }
 class Posts extends React.Component<propTypes> {
   componentDidMount(){
     this.props.fetchPosts();
+  }
+
+  componentWillReceiveProps(nextProps:any) {
+    if(nextProps.newPost){
+      this.props.posts.unshift(nextProps.newPost);
+    }
   }
   render() {
     const postItems = this.props.posts.map((post: PostProps) => {
@@ -36,7 +43,8 @@ class Posts extends React.Component<propTypes> {
 }
 
 const mapStateToProps = (state:any) => ({
-  posts: state.posts.items
+  posts: state.posts.items,
+  newPost: state.posts.item
 })
 
 export default connect(mapStateToProps, {fetchPosts})(Posts);
